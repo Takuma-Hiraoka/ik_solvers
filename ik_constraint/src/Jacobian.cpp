@@ -263,11 +263,22 @@ namespace IK {
         for(size_t j=0;j<robot->numJoints();j++){
           if(jacobianColMap.find(robot->joint(j)) != jacobianColMap.end()){
             int col_idx = jacobianColMap[robot->joint(j)];
-	    double weight = 1.0;
-	    if((robot->joint(j)->name() == "CHEST_JOINT0") || (robot->joint(j)->name() == "CHEST_JOINT1") || (robot->joint(j)->name() == "CHEST_JOINT2")) weight = 10.0;
+	    double weight = 0.0;
+	    if((robot->joint(j)->name() == "RLEG_JOINT0") ||
+	       (robot->joint(j)->name() == "RLEG_JOINT1") ||
+	       (robot->joint(j)->name() == "RLEG_JOINT2") ||
+	       (robot->joint(j)->name() == "RLEG_JOINT3") ||
+	       (robot->joint(j)->name() == "RLEG_JOINT4") ||
+	       (robot->joint(j)->name() == "RLEG_JOINT5") ||
+	       (robot->joint(j)->name() == "LLEG_JOINT0") ||
+	       (robot->joint(j)->name() == "LLEG_JOINT1") ||
+	       (robot->joint(j)->name() == "LLEG_JOINT2") ||
+	       (robot->joint(j)->name() == "LLEG_JOINT3") ||
+	       (robot->joint(j)->name() == "LLEG_JOINT4") ||
+	       (robot->joint(j)->name() == "LLEG_JOINT5")) weight = 1.0; // COMは足とrootのみ使う
             for(size_t k=0;k<3;k++){
               for(size_t d=0;d<getJointDOF(robot->joint(j));d++){
-                jacobian.coeffRef(k,col_idx+d) = sign * CMJ(k,j+d) / weight;
+                jacobian.coeffRef(k,col_idx+d) = sign * CMJ(k,j+d) * weight;
               }
             }
           }
